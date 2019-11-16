@@ -1,0 +1,170 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using Q2.Models;
+using System.Data;
+
+namespace Q2.Controllers
+{
+    public class ListingPeopleController : Controller
+    {
+        Training_19Sep19_ChennaiEntities tb = new Training_19Sep19_ChennaiEntities();
+        // GET: ListingPeople
+       
+        public ActionResult Index()                 //action result for index page
+        {
+            return View(tb.PeopleTables.ToList());
+        }
+        public ActionResult ActivityNature()      // data from business table where details are displayed based on trade
+                                                  //ordered according to business id
+        {
+            var Nature = from pl in tb.PeopleTables
+                         where (pl.Addressproof == "RationCard")
+                         orderby pl.Id ascending
+                         select pl;
+            return View(Nature);                         //returning view page of activity nature
+
+        }
+        public ActionResult Date()      // data from business table where details are displayed based on trade
+                                                  //ordered according to business id
+        {
+            var Result = from pl in tb.PeopleTables
+                        
+                         orderby pl.Dob ascending
+                         select pl;
+            return View(Result); 
+            //returning view page of activity nature
+
+        }
+        public ActionResult Location()      // data from business table where details are displayed based on trade
+                                                  //ordered according to business id
+        {
+            var Nature = from pl in tb.PeopleTables
+                         where (pl.Location == "Vijayawada")
+                         orderby pl.Id ascending
+                         select pl;
+            return View(Nature);                         //returning view page of activity nature
+
+        }
+        public ActionResult Delete(int id)
+        {
+            try
+            {
+                using (Training_19Sep19_ChennaiEntities dbmodel1 = new Training_19Sep19_ChennaiEntities())
+                {
+                    return View(dbmodel1.PeopleTables.Where(x => x.Id == id).FirstOrDefault());
+                }
+            }
+
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id, PeopleTable ent)
+        {
+            try
+            {
+                using (Training_19Sep19_ChennaiEntities dbmodel1 = new Training_19Sep19_ChennaiEntities())
+                {
+                    ent = dbmodel1.PeopleTables.Where(x => x.Id == id).FirstOrDefault();
+                    dbmodel1.PeopleTables.Remove(ent);
+                    dbmodel1.SaveChanges();
+                }
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: Entity/Edit/5
+        public ActionResult Edit(int id)
+        {
+            try
+            {
+                using (Training_19Sep19_ChennaiEntities dbmodel = new Training_19Sep19_ChennaiEntities())
+                {
+                    return View(dbmodel.PeopleTables.Where(x => x.Id == id).FirstOrDefault());
+                }
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: Entity/Create
+        [HttpPost]
+        public ActionResult Create(PeopleTable ent)
+        {
+            try
+            {
+
+                using (Training_19Sep19_ChennaiEntities dbmodel = new Training_19Sep19_ChennaiEntities())
+                {
+                    dbmodel.PeopleTables.Add(ent);
+                    dbmodel.SaveChanges();
+                }
+                // TODO: Add insert logic here
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        public ActionResult Details(int id)
+        {
+
+            try
+            {
+                using (Training_19Sep19_ChennaiEntities dbmodel = new Training_19Sep19_ChennaiEntities())
+                {
+                    return View(dbmodel.PeopleTables.Where(x => x.Id == id).FirstOrDefault());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+        }
+        // POST: Entity/Edit/5
+        [HttpPost]
+        public ActionResult Edit(int id, PeopleTable ent)
+        {
+            try
+            {
+                // TODO: Add update logic here
+                using (Training_19Sep19_ChennaiEntities dbmodel1 = new Training_19Sep19_ChennaiEntities())
+                {
+                    dbmodel1.Entry(ent).State = System.Data.Entity.EntityState.Modified;
+                    dbmodel1.SaveChanges();
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+    }
+
+
+}
